@@ -1,0 +1,12 @@
+version: '3.8'
+
+services:
+  secret:
+    build:
+      context: ./secret
+      dockerfile: Dockerfile
+    container_name: "${PROJECT_NAME}_secret"
+    ports:
+      - "9001:80" # Temporary port for testing
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
