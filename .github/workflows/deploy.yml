@@ -2,8 +2,8 @@ name: deploy
 
 on:
   push:
-    # branches:
-    #   - master
+    branches:
+      - master
 
 jobs:
   build:
@@ -20,14 +20,8 @@ jobs:
     - name: Publish with dotnet
       run: dotnet publish --configuration Release Web/Web.csproj
 
-    # - name: Archive build artifact
-    #   run: |
-    #     cd Web/bin/Release/net8.0
-    #     7z a -tzip ${{ runner.temp }}\WindowsFormsApp1.zip *
-
     - name: Upload build artifact
       uses: actions/upload-artifact@v2
       with:
         name: Secret
-        # path: ${{ runner.temp }}\WindowsFormsApp1.zip
-        path: Web/bin/Release/net8.0
+        path: Web/bin/Release/net8.0/publish
