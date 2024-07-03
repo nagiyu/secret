@@ -18,4 +18,7 @@ app.UseAuthorization();
 
 app.MapRazorPages();
 
+// ポート設定
+app.Urls.Add("http://*:80");
+
 app.Run();
