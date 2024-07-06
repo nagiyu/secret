@@ -5,8 +5,19 @@ services:
     build:
       context: ./secret
       dockerfile: Dockerfile
-    container_name: "${PROJECT_NAME}_secret"
+    container_name: "${PROJECT_NAME}_web"
     ports:
       - "9001:80" # Temporary port for testing
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
+
+  sqlserver:
+    build:
+      context: ./sqlserver
+      dockerfile: Dockerfile
+    container_name: "${PROJECT_NAME}_sqlserver"
+    ports:
+      - "1433:1433" # Temporary port for testing
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=Password123!
