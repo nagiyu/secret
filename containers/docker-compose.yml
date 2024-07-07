@@ -21,3 +21,5 @@ services:
     environment:
       - ACCEPT_EULA=Y
       - SA_PASSWORD=Password123!
+    volumes:
+      - ./resources/sqlserver:/var/opt/mssql
