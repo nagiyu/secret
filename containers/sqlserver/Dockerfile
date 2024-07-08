@@ -16,8 +16,8 @@ RUN chmod +x /usr/local/bin/entrypoint.sh
 # mssqlユーザーに戻す
 USER mssql
 
+# Copy Init SQL
+COPY ./sql-scripts /sql-scripts
+
 # エントリーポイントスクリプトを実行
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
-
-# デフォルトのコマンド
-CMD ["/opt/mssql/bin/sqlservr"]
