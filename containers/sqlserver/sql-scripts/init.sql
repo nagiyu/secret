@@ -1,0 +1,11 @@
+CREATE DATABASE MySecretsManagerDb;
+GO
+
+USE MySecretsManagerDb;
+GO
+
+CREATE TABLE Secrets (
+    Id INT IDENTITY(1,1) PRIMARY KEY,
+    [Key] NVARCHAR(100) NOT NULL,
+    [Value] NVARCHAR(100) NOT NULL
+);

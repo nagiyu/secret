@@ -7,7 +7,7 @@ services:
       dockerfile: Dockerfile
     container_name: "${PROJECT_NAME}_web"
     ports:
-      - "9001:80" # Temporary port for testing
+      - "9002:80" # Temporary port for testing
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
 
