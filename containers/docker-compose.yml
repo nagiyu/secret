@@ -14,8 +14,8 @@ services:
   postgres:
     image: postgres:13.3
     container_name: "${PROJECT_NAME}_postgres"
-    ports:
-      - "5432:5432" # Temporary port for testing
+    # ports:
+    #   - "5432:5432" # Temporary port for testing
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=Password123!
