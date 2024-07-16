@@ -10,6 +10,8 @@ services:
       - "9002:80" # Temporary port for testing
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
+    volumes:
+      - ./secret/bin:/app
 
   postgres:
     image: postgres:13.3
