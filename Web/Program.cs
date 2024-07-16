@@ -9,7 +9,7 @@ builder.Services.AddControllersWithViews();
 
 // Configure the DbContext with a connection string from the appsettings.json file.
 builder.Services.AddDbContext<SecretDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Register the repository as a service.
 builder.Services.AddScoped<ISecretRepository, SecretRepository>();

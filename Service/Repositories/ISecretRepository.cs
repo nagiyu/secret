@@ -10,7 +10,7 @@ namespace Service.Repositories
     public interface ISecretRepository
     {
         Task<IEnumerable<Secret>> GetAllAsync();
-        Task<Secret> GetByIdAsync(int id);
+        Task<Secret?> GetByIdAsync(int id);
         Task AddAsync(Secret secret);
         Task UpdateAsync(Secret secret);
         Task DeleteAsync(int id);
