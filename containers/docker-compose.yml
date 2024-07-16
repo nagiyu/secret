@@ -12,6 +12,8 @@ services:
       - ASPNETCORE_ENVIRONMENT=Production
     volumes:
       - ./secret/bin:/app
+    networks:
+      - secret_network
 
   postgres:
     image: postgres:13.3
@@ -36,3 +38,7 @@ services:
       - PGADMIN_DEFAULT_PASSWORD=Password123!
     volumes:
       - ./pgadmin/servers.json:/pgadmin4/servers.json
+
+networks:
+  secret_network:
+    external: true
