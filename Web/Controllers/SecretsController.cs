@@ -40,14 +40,28 @@ namespace Web.Controllers
         [HttpPut]
         public async Task<IActionResult> PutSecret(int id, [FromBody] Secret secret)
         {
-            secret.Id = id;
-            await _repository.UpdateAsync(secret);
+            var existingSecret = await _repository.GetByIdAsync(id);
+            if (existingSecret == null)
+            {
+                return NotFound();
+            }
+
+            existingSecret.Key = secret?.Key;
+            existingSecret.Value = secret?.Value;
+
+            await _repository.UpdateAsync(existingSecret);
             return NoContent();
         }
 
         [HttpDelete]
         public async Task<IActionResult> DeleteSecret(int id)
         {
+            var secret = await _repository.GetByIdAsync(id);
+            if (secret == null)
+            {
+                return NotFound();
+            }
+
             await _repository.DeleteAsync(id);
             return NoContent();
         }

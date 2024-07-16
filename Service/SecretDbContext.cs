@@ -16,7 +16,21 @@ namespace Service
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Secret>().ToTable("Secrets");
+            modelBuilder.Entity<Secret>(entity =>
+            {
+                entity.ToTable("secrets");
+
+                entity.HasKey(e => e.Id);
+
+                entity.Property(e => e.Id)
+                    .HasColumnName("id");
+
+                entity.Property(e => e.Key)
+                    .HasColumnName("key");
+
+                entity.Property(e => e.Value)
+                    .HasColumnName("value");
+            });
         }
     }
 }

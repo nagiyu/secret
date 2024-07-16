@@ -11,15 +11,26 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
 
-  sqlserver:
-    build:
-      context: ./sqlserver
-      dockerfile: Dockerfile
-    container_name: "${PROJECT_NAME}_sqlserver"
+  postgres:
+    image: postgres:13.3
+    container_name: "${PROJECT_NAME}_postgres"
     # ports:
-    #   - "1433:1433" # Temporary port for testing
+    #   - "5432:5432" # Temporary port for testing
     environment:
-      - ACCEPT_EULA=Y
-      - SA_PASSWORD=Password123!
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=Password123!
+      - POSTGRES_DB=my_secrets_manager_db
     volumes:
-      - ./../resources/sqlserver:/var/opt/mssql
+      - ./postgres/initdb:/docker-entrypoint-initdb.d
+      - ./../resources/postgres:/var/lib/postgresql/data
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: "${PROJECT_NAME}_pgadmin"
+    ports:
+      - "9003:80"
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=test@sample.com
+      - PGADMIN_DEFAULT_PASSWORD=Password123!
+    volumes:
+      - ./pgadmin/servers.json:/pgadmin4/servers.json

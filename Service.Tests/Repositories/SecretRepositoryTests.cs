@@ -13,9 +13,9 @@ namespace Service.Tests.Repositories
     [TestClass]
     public class SecretRepositoryTests
     {
-        private SecretDbContext _context;
-        private SecretRepository _repository;
-        private IConfiguration _configuration;
+        private SecretDbContext? _context;
+        private SecretRepository? _repository;
+        private IConfiguration? _configuration;
 
         [TestInitialize]
         public void TestInitialize()
@@ -32,7 +32,7 @@ namespace Service.Tests.Repositories
             Console.WriteLine($"Connection String: {connectionString}");
 
             var options = new DbContextOptionsBuilder<SecretDbContext>()
-                .UseSqlServer(connectionString)
+                .UseNpgsql(connectionString)
                 .Options;
             _context = new SecretDbContext(options);
 
@@ -42,20 +42,22 @@ namespace Service.Tests.Repositories
         [TestCleanup]
         public void TestCleanup()
         {
-            _context.Dispose();
+            _context?.Dispose();
         }
 
         [TestMethod]
         public async Task GetAllAsync_ShouldReturnAllSecrets()
         {
-            var beforeCount = (await _repository.GetAllAsync()).Count();
+            var repository = GetRepository();
+
+            var beforeCount = (await repository.GetAllAsync()).Count();
 
             var secret1 = new Secret { Key = "TestKey", Value = "TestValue" };
-            await _repository.AddAsync(secret1);
+            await repository.AddAsync(secret1);
             var secret2 = new Secret { Key = "TestKey", Value = "TestValue" };
-            await _repository.AddAsync(secret2);
+            await repository.AddAsync(secret2);
 
-            var afterCount = (await _repository.GetAllAsync()).Count();
+            var afterCount = (await repository.GetAllAsync()).Count();
 
             Assert.AreEqual(beforeCount + 2, afterCount);
         }
@@ -63,10 +65,12 @@ namespace Service.Tests.Repositories
         [TestMethod]
         public async Task GetByIdAsync_ShouldReturnSecret()
         {
-            var secret = new Secret { Key = "TestKey", Value = "TestValue" };
-            await _repository.AddAsync(secret);
+            var repository = GetRepository();
 
-            var retrievedSecret = await _repository.GetByIdAsync(secret.Id);
+            var secret = new Secret { Key = "TestKey", Value = "TestValue" };
+            await repository.AddAsync(secret);
+
+            var retrievedSecret = await repository.GetByIdAsync(secret.Id);
             Assert.IsNotNull(retrievedSecret);
             Assert.AreEqual("TestKey", retrievedSecret.Key);
             Assert.AreEqual("TestValue", retrievedSecret.Value);
@@ -75,26 +79,41 @@ namespace Service.Tests.Repositories
         [TestMethod]
         public async Task UpdateAsync_ShouldUpdateSecret()
         {
+            var repository = GetRepository();
+
             var secret = new Secret { Key = "TestKey", Value = "TestValue" };
-            await _repository.AddAsync(secret);
+            await repository.AddAsync(secret);
 
             secret.Value = "UpdatedValue";
-            await _repository.UpdateAsync(secret);
+            await repository.UpdateAsync(secret);
 
-            var updatedSecret = await _repository.GetByIdAsync(secret.Id);
+            var updatedSecret = await repository.GetByIdAsync(secret.Id);
+            Assert.IsNotNull(updatedSecret);
             Assert.AreEqual("UpdatedValue", updatedSecret.Value);
         }
 
         [TestMethod]
         public async Task DeleteAsync_ShouldRemoveSecret()
         {
+            var repository = GetRepository();
+
             var secret = new Secret { Key = "TestKey", Value = "TestValue" };
-            await _repository.AddAsync(secret);
+            await repository.AddAsync(secret);
 
-            await _repository.DeleteAsync(secret.Id);
+            await repository.DeleteAsync(secret.Id);
 
-            var deletedSecret = await _repository.GetByIdAsync(secret.Id);
+            var deletedSecret = await repository.GetByIdAsync(secret.Id);
             Assert.IsNull(deletedSecret);
+        }
+
+        private SecretRepository GetRepository()
+        {
+            if (_repository == null)
+            {
+                throw new Exception("Repository is null.");
+            }
+
+            return _repository;
         }
     }
 }
