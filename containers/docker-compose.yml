@@ -27,6 +27,8 @@ services:
     volumes:
       - ./postgres/initdb:/docker-entrypoint-initdb.d
       - ./../resources/postgres:/var/lib/postgresql/data
+    networks:
+      - secret_network
 
   pgadmin:
     image: dpage/pgadmin4
@@ -38,6 +40,8 @@ services:
       - PGADMIN_DEFAULT_PASSWORD=Password123!
     volumes:
       - ./pgadmin/servers.json:/pgadmin4/servers.json
+    networks:
+      - secret_network
 
 networks:
   secret_network:
