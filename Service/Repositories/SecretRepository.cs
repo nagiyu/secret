@@ -22,6 +22,11 @@ namespace Service.Repositories
             return await _context.Secrets.ToListAsync();
         }
 
+        public async Task<Secret?> GetSecret(string key)
+        {
+            return await _context.Secrets.SingleOrDefaultAsync(s => s.Key == key);
+        }
+
         public async Task<Secret?> GetByIdAsync(int id)
         {
             return await _context.Secrets.SingleOrDefaultAsync(s => s.Id == id);

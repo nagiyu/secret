@@ -52,9 +52,9 @@ namespace Service.Tests.Repositories
 
             var beforeCount = (await repository.GetAllAsync()).Count();
 
-            var secret1 = new Secret { Key = "TestKey", Value = "TestValue" };
+            var secret1 = new Secret { Key = Guid.NewGuid().ToString(), Value = "TestValue" };
             await repository.AddAsync(secret1);
-            var secret2 = new Secret { Key = "TestKey", Value = "TestValue" };
+            var secret2 = new Secret { Key = Guid.NewGuid().ToString(), Value = "TestValue" };
             await repository.AddAsync(secret2);
 
             var afterCount = (await repository.GetAllAsync()).Count();
@@ -63,16 +63,32 @@ namespace Service.Tests.Repositories
         }
 
         [TestMethod]
+        public async Task GetAsync_ShouldReturnSecret()
+        {
+            var repository = GetRepository();
+
+            var key = Guid.NewGuid().ToString();
+            var secret = new Secret { Key = key, Value = "TestValue" };
+            await repository.AddAsync(secret);
+
+            var retrievedSecret = await repository.GetSecret(secret.Key);
+            Assert.IsNotNull(retrievedSecret);
+            Assert.AreEqual(key, retrievedSecret.Key);
+            Assert.AreEqual("TestValue", retrievedSecret.Value);
+        }
+
+        [TestMethod]
         public async Task GetByIdAsync_ShouldReturnSecret()
         {
             var repository = GetRepository();
 
-            var secret = new Secret { Key = "TestKey", Value = "TestValue" };
+            var key = Guid.NewGuid().ToString();
+            var secret = new Secret { Key = key, Value = "TestValue" };
             await repository.AddAsync(secret);
 
             var retrievedSecret = await repository.GetByIdAsync(secret.Id);
             Assert.IsNotNull(retrievedSecret);
-            Assert.AreEqual("TestKey", retrievedSecret.Key);
+            Assert.AreEqual(key, retrievedSecret.Key);
             Assert.AreEqual("TestValue", retrievedSecret.Value);
         }
 
@@ -81,7 +97,7 @@ namespace Service.Tests.Repositories
         {
             var repository = GetRepository();
 
-            var secret = new Secret { Key = "TestKey", Value = "TestValue" };
+            var secret = new Secret { Key = Guid.NewGuid().ToString(), Value = "TestValue" };
             await repository.AddAsync(secret);
 
             secret.Value = "UpdatedValue";
@@ -97,7 +113,7 @@ namespace Service.Tests.Repositories
         {
             var repository = GetRepository();
 
-            var secret = new Secret { Key = "TestKey", Value = "TestValue" };
+            var secret = new Secret { Key = Guid.NewGuid().ToString(), Value = "TestValue" };
             await repository.AddAsync(secret);
 
             await repository.DeleteAsync(secret.Id);
